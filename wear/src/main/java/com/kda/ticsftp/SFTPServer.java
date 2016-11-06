@@ -22,9 +22,8 @@ import java.util.List;
  */
 
 public final class SFTPServer extends Service {
-    public static final String REQUEST_NAME = "com.kda.ticsftp.SFTPServer.REQ";
-    public static final int START_SERVER = 0;
-    public static final int STOP_SERVER = 1;
+    public static final Object AUTH_LOCK = new Object();
+    public static boolean AUTH_OK = false;
     /**
      * Class for clients to access.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with
@@ -34,6 +33,10 @@ public final class SFTPServer extends Service {
         SFTPServer getService() {
             return SFTPServer.this;
         }
+    }
+
+    public static int getPubKeyTimeout() {
+        return pubKeyTimeout;
     }
 
     @Override
@@ -53,9 +56,6 @@ public final class SFTPServer extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        passwordAuth = new SimplePasswordAuthenticator();
-        passwordAuth.setUser("test");
-        passwordAuth.setPassword("test");
         publicKeyAuth = new ConfirmationActivityPublicKeyAuthenticator(this);
         fileSystemFactory = new SimpleFileSystemFactory();
         keyProvider = new SimpleGeneratorHostKeyProvider(serverKey, serverKeyType);
@@ -78,7 +78,21 @@ public final class SFTPServer extends Service {
     }
 
     public boolean showAcceptDialog(String user, PublicKey key) {
-        return false;
+        boolean res = false;
+        synchronized (SFTPServer.AUTH_LOCK) {
+            Intent intent = new Intent(this, UserLoginConfirmationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                SFTPServer.AUTH_OK = false;
+                startActivity(intent);
+                SFTPServer.AUTH_LOCK.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            res = SFTPServer.AUTH_OK;
+        }
+        return res;
+
     }
 
     public EEnableStatus start() {
@@ -91,7 +105,6 @@ public final class SFTPServer extends Service {
             sshd.setKeyPairProvider(keyProvider);
             // Set The
             sshd.setPublickeyAuthenticator(publicKeyAuth);
-            sshd.setPasswordAuthenticator(passwordAuth);
             // Enable SFTP support
             subsystems.add(new SftpSubsystem.Factory());
             sshd.setSubsystemFactories(subsystems);
@@ -122,6 +135,7 @@ public final class SFTPServer extends Service {
     private String serverKey = "/sdcard/sftp/key.srv";
     private String serverKeyType = "RSA";
     private String sftpRoot = serverRoot + "/root";
+    private static int pubKeyTimeout = 5000;
 
     // Server components
     private SimplePasswordAuthenticator passwordAuth;
@@ -135,5 +149,4 @@ public final class SFTPServer extends Service {
     private static final String TAG="SFTPServer";
     // Android stuff
     private final IBinder binder = new LocalBinder();
-
 }

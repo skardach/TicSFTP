@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:padding="5dp"
+    tools:context="com.kda.ticsftp.UserLoginConfirmationActivity"
+    tools:deviceIds="wear_round">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:textAlignment="center"
+        android:text="@string/new_user_wants_to_log_in_allow" />
+
+    <android.support.wearable.view.DelayedConfirmationView
+        android:id="@+id/login_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/confirm_circle"
+        app:circle_color="#48b3ff"
+        app:circle_radius="40dp"
+        app:circle_radius_pressed="35dp"
+        app:circle_padding="5dp"
+        app:circle_border_width="5dp"
+        app:circle_border_color="@color/white" />
+</LinearLayout>
