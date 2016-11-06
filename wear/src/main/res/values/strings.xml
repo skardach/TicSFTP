@@ -3,4 +3,5 @@
     <string name="title_activity_user_login_confirmation">UserLoginConfirmationActivity</string>
     <string name="sftp_server">SFTP Server</string>
     <string name="enable_server">Enable Server</string>
+    <string name="new_user_wants_to_log_in_allow">New user wants to log in. Allow?</string>
 </resources>

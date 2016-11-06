@@ -1,5 +1,9 @@
 package com.kda.ticsftp;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
 import android.util.Log;
 
 import org.apache.sshd.SshServer;
@@ -9,6 +13,7 @@ import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.sftp.SftpSubsystem;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +21,64 @@ import java.util.List;
  * Created by kardasan on 04/11/16.
  */
 
-final class SFTPServer {
-    public enum EEnableStatus {
+public final class SFTPServer extends Service {
+    public static final String REQUEST_NAME = "com.kda.ticsftp.SFTPServer.REQ";
+    public static final int START_SERVER = 0;
+    public static final int STOP_SERVER = 1;
+    /**
+     * Class for clients to access.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with
+     * IPC.
+     */
+    public class LocalBinder extends Binder {
+        SFTPServer getService() {
+            return SFTPServer.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    protected enum EEnableStatus {
         OK,
         IOException
     }
-    public enum EDisableStatus {
+    protected enum EDisableStatus {
         OK,
         InterruptedException
     }
 
-    public SFTPServer() {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        passwordAuth = new SimplePasswordAuthenticator();
         passwordAuth.setUser("test");
         passwordAuth.setPassword("test");
+        publicKeyAuth = new ConfirmationActivityPublicKeyAuthenticator(this);
+        fileSystemFactory = new SimpleFileSystemFactory();
+        keyProvider = new SimpleGeneratorHostKeyProvider(serverKey, serverKeyType);
+        sshd = SshServer.setUpDefaultServer();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        EEnableStatus res = this.start();
+        if (res != SFTPServer.EEnableStatus.OK) {
+            Log.e(TAG, "Unable to start SFTP server: " + res.toString());
+            return Service.START_NOT_STICKY;
+        }
+        return Service.START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        this.stop();
+    }
+
+    public boolean showAcceptDialog(String user, PublicKey key) {
+        return false;
     }
 
     public EEnableStatus start() {
@@ -74,15 +124,16 @@ final class SFTPServer {
     private String sftpRoot = serverRoot + "/root";
 
     // Server components
-    private final SimplePasswordAuthenticator passwordAuth = new SimplePasswordAuthenticator();
-    private final ConfirmationActivityPublicKeyAuthenticator publicKeyAuth =
-            new ConfirmationActivityPublicKeyAuthenticator();
-    private final SimpleFileSystemFactory fileSystemFactory = new SimpleFileSystemFactory();
-    private final SimpleGeneratorHostKeyProvider keyProvider =
-            new SimpleGeneratorHostKeyProvider(serverKey, serverKeyType);
-
+    private SimplePasswordAuthenticator passwordAuth;
+    private ConfirmationActivityPublicKeyAuthenticator publicKeyAuth;
+    private SimpleFileSystemFactory fileSystemFactory;
+    private SimpleGeneratorHostKeyProvider keyProvider;
     // Server object
-    private final SshServer sshd = SshServer.setUpDefaultServer();
+    private SshServer sshd;
+
     // Other stuff
     private static final String TAG="SFTPServer";
+    // Android stuff
+    private final IBinder binder = new LocalBinder();
+
 }

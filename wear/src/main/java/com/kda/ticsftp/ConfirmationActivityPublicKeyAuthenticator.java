@@ -13,20 +13,27 @@ import java.util.List;
 
 final class ConfirmationActivityPublicKeyAuthenticator implements PublickeyAuthenticator {
 
-        private List<PublicKey> keys = new ArrayList<PublicKey>();
+    public ConfirmationActivityPublicKeyAuthenticator(SFTPServer parent) {
+        this.parent = parent;
+    }
 
-        public void addKey(PublicKey key) {
-            keys.add(key);
-        }
+    public void addKey(PublicKey key) {
+        keys.add(key);
+    }
 
-        @Override
-        public boolean authenticate(String user, PublicKey key, ServerSession session) {
-
-            for (PublicKey k : keys) {
-                if (key.equals(k)) {
-                    return true;
-                }
+    @Override
+    public boolean authenticate(String user, PublicKey key, ServerSession session) {
+        for (PublicKey k : keys) {
+            if (key.equals(k)) {
+                return true;
             }
-            return false;
         }
+        boolean acceptKey = parent.showAcceptDialog(user, key);
+        if (acceptKey)
+            addKey(key);
+        return acceptKey;
+    }
+
+    private List<PublicKey> keys = new ArrayList<PublicKey>();
+    private SFTPServer parent;
 }

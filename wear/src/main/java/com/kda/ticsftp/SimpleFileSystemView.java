@@ -1,11 +1,7 @@
 package com.kda.ticsftp;
 
-import org.apache.sshd.server.FileSystemView;
 import org.apache.sshd.server.SshFile;
 import org.apache.sshd.server.filesystem.NativeFileSystemView;
-import org.apache.sshd.server.filesystem.NativeSshFile;
-
-import java.io.File;
 
 /**
  * Created by kardasan on 05/11/16.
