@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">TicSFTP</string>
+    <string name="title_activity_user_login_confirmation">UserLoginConfirmationActivity</string>
+    <string name="sftp_server">SFTP Server</string>
+    <string name="enable_server">Enable Server</string>
+</resources>

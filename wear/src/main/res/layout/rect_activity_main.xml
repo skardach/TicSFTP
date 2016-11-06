@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_vertical"
+    android:padding="5dp"
+    tools:context="com.kda.ticsftp.MainActivity"
+    tools:deviceIds="wear_square">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sftp_server"
+        android:labelFor="@+id/tb_enableServer"/>
+    <ToggleButton
+        android:text="@string/enable_server"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_enableServer" />
+</LinearLayout>
