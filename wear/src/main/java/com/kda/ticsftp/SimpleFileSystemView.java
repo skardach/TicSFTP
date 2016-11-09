@@ -3,10 +3,6 @@ package com.kda.ticsftp;
 import org.apache.sshd.server.SshFile;
 import org.apache.sshd.server.filesystem.NativeFileSystemView;
 
-/**
- * Created by kardasan on 05/11/16.
- */
-
 final class SimpleFileSystemView extends NativeFileSystemView {
 
     public SimpleFileSystemView(String userName, String root) {

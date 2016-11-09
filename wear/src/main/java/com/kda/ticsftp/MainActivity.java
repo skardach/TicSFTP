@@ -7,20 +7,24 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class MainActivity extends Activity implements CompoundButton.OnCheckedChangeListener,
         WatchViewStub.OnLayoutInflatedListener {
+    private final String SHARED_PREFS_TAG = "com.kda.ticftp";
     private final String STATE_SRV_ENABLED = "com.kda.ticftp.SrvEnabled";
     private boolean server_enabled = false;
+    private boolean hotspot_enabled = false;
     private ToggleButton mEnableServer;
+    private ToggleButton mEnableHotSpot;
+    private TextView mEnableHotSpotLabel;
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    private void handleServerChange(boolean enable) {
         SharedPreferences.Editor editor =
-                this.getSharedPreferences("com.kda.ticftp", Context.MODE_PRIVATE).edit();
+                this.getSharedPreferences(SHARED_PREFS_TAG, Context.MODE_PRIVATE).edit();
         Intent intent = new Intent(this, SFTPServer.class);
-        if (isChecked) {
+        if (enable) {
             server_enabled = true;
             this.startService(intent);
         } else {
@@ -29,6 +33,19 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
         }
         editor.putBoolean(STATE_SRV_ENABLED, server_enabled);
         editor.commit();
+    }
+
+    private void handleHotspotChange(boolean enable) {
+        HotSpotManager.configApState(this, enable);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.equals(mEnableServer)) {
+            handleServerChange(isChecked);
+        } else if (buttonView.equals(mEnableHotSpot)) {
+            handleHotspotChange(isChecked);
+        }
     }
 
     @Override
@@ -41,9 +58,15 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
 
     @Override
     public void onLayoutInflated(WatchViewStub watchViewStub) {
-        mEnableServer = (ToggleButton) findViewById(R.id.tb_enableServer);
+        mEnableServer = (ToggleButton) findViewById(R.id.tb_enable_server);
         mEnableServer.setChecked(server_enabled);
         mEnableServer.setOnCheckedChangeListener(this);
+        mEnableHotSpot = (ToggleButton) findViewById(R.id.tb_enable_hotspot);
+        mEnableHotSpot.setChecked(hotspot_enabled);
+        mEnableHotSpot.setOnCheckedChangeListener(this);
+        mEnableHotSpotLabel = (TextView) findViewById(R.id.tv_enable_hotspot);
+        mEnableHotSpotLabel.setText(getResources().getString(R.string.enable_hotspot) +
+                " (" + SFTPServer.getHotspotName() + ")");
     }
 
     @Override
@@ -63,5 +86,7 @@ public class MainActivity extends Activity implements CompoundButton.OnCheckedCh
             this.getSharedPreferences(
                 "com.kda.ticftp",
                 Context.MODE_PRIVATE).getBoolean(STATE_SRV_ENABLED, server_enabled);
+        hotspot_enabled = HotSpotManager.isApOn(this);
+
     }
 }

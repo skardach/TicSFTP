@@ -6,10 +6,6 @@ import org.apache.sshd.server.FileSystemView;
 
 import java.io.IOException;
 
-/**
- * Created by kardasan on 05/11/16.
- */
-
 final class SimpleFileSystemFactory implements FileSystemFactory {
 
     @Override

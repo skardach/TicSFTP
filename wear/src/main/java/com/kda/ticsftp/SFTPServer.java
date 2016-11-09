@@ -17,10 +17,6 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kardasan on 04/11/16.
- */
-
 public final class SFTPServer extends Service {
     public static final Object AUTH_LOCK = new Object();
     public static boolean AUTH_OK = false;
@@ -129,13 +125,23 @@ public final class SFTPServer extends Service {
         return EDisableStatus.OK;
     }
 
+    public static String getHotspotName() {
+        return hotspotName;
+    }
+
+    public static String getHotspotPassword() {
+        return hotspotPassword;
+    }
+
     // Configuration variables - move later on to settings.
     private int port = 9988;
-    private String serverRoot = "/sdcard/sftp";
-    private String serverKey = "/sdcard/sftp/key.srv";
-    private String serverKeyType = "RSA";
-    private String sftpRoot = serverRoot + "/root";
     private static int pubKeyTimeout = 5000;
+    private static String serverRoot = "/sdcard/sftp";
+    private static String serverKey = "/sdcard/sftp/key.srv";
+    private static String serverKeyType = "RSA";
+    private static String sftpRoot = serverRoot + "/root";
+    private static String hotspotName = "TicSFTP_AP";
+    private static String hotspotPassword = "12345678";
 
     // Server components
     private SimplePasswordAuthenticator passwordAuth;

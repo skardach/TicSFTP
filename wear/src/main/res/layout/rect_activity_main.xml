@@ -13,10 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sftp_server"
-        android:labelFor="@+id/tb_enableServer"/>
+        android:labelFor="@+id/tb_enable_server"/>
     <ToggleButton
         android:text="@string/enable_server"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tb_enableServer" />
+        android:id="@+id/tb_enable_server" />
 </LinearLayout>

@@ -3,10 +3,6 @@ package com.kda.ticsftp;
 import org.apache.sshd.server.PasswordAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
 
-/**
- * Created by kardasan on 05/11/16.
- */
-
 final class SimplePasswordAuthenticator implements PasswordAuthenticator {
 
     private String user;

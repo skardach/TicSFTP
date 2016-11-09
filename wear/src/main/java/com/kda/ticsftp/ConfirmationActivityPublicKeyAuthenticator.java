@@ -7,10 +7,6 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by kardasan on 05/11/16.
- */
-
 final class ConfirmationActivityPublicKeyAuthenticator implements PublickeyAuthenticator {
 
     public ConfirmationActivityPublicKeyAuthenticator(SFTPServer parent) {
