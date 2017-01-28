@@ -22,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/confirm_circle"
         app:circle_color="#48b3ff"
         app:circle_radius="40dp"
         app:circle_radius_pressed="35dp"
