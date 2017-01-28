@@ -11,39 +11,8 @@
     android:padding="10dp"
     tools:context="com.kda.ticsftp.MainActivity"
     tools:deviceIds="wear_round">
-    <RelativeLayout
+    <android.support.wearable.view.WearableListView
+        android:id="@+id/lv_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hotspot"
-            android:id="@+id/tv_enable_hotspot"
-            android:labelFor="@+id/tb_enable_hotspot"
-            android:layout_alignBaseline="@id/tb_enable_hotspot" />
-        <ToggleButton
-            android:text="@string/enable_hotspot"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:id="@+id/tb_enable_hotspot"
-            android:focusable="false"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sftp_server"
-            android:labelFor="@+id/tb_enable_server"
-            android:focusable="false"
-            android:layout_alignBaseline="@id/tb_enable_server" />
-        <ToggleButton
-            android:text="@string/enable_server"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:id="@+id/tb_enable_server"
-            android:layout_alignParentEnd="true" />
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 </LinearLayout>

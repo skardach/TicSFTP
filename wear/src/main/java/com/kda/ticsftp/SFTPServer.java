@@ -31,10 +31,6 @@ public final class SFTPServer extends Service {
         }
     }
 
-    public static int getPubKeyTimeout() {
-        return pubKeyTimeout;
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return binder;
@@ -54,7 +50,8 @@ public final class SFTPServer extends Service {
         super.onCreate();
         publicKeyAuth = new ConfirmationActivityPublicKeyAuthenticator(this);
         fileSystemFactory = new SimpleFileSystemFactory();
-        keyProvider = new SimpleGeneratorHostKeyProvider(serverKey, serverKeyType);
+        keyProvider = new SimpleGeneratorHostKeyProvider(Config.serverKey,
+                Config.serverKeyType);
         sshd = SshServer.setUpDefaultServer();
     }
 
@@ -74,7 +71,7 @@ public final class SFTPServer extends Service {
     }
 
     public boolean showAcceptDialog(String user, PublicKey key) {
-        boolean res = false;
+        boolean res;
         synchronized (SFTPServer.AUTH_LOCK) {
             Intent intent = new Intent(this, UserLoginConfirmationActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -96,7 +93,7 @@ public final class SFTPServer extends Service {
             List<NamedFactory<Command>> subsystems = new ArrayList<>();
             // Set listen address and port
             sshd.setHost("0.0.0.0");
-            sshd.setPort(port);
+            sshd.setPort(Config.port);
             // Set accepted key types (default RSA).
             sshd.setKeyPairProvider(keyProvider);
             // Set The
@@ -105,7 +102,7 @@ public final class SFTPServer extends Service {
             subsystems.add(new SftpSubsystem.Factory());
             sshd.setSubsystemFactories(subsystems);
             // Setup root directory for SFTP
-            fileSystemFactory.setRoot(sftpRoot);
+            fileSystemFactory.setRoot(Config.sftpRoot);
             sshd.setFileSystemFactory(fileSystemFactory);
             sshd.start();
         } catch (IOException e) {
@@ -125,26 +122,7 @@ public final class SFTPServer extends Service {
         return EDisableStatus.OK;
     }
 
-    public static String getHotspotName() {
-        return hotspotName;
-    }
-
-    public static String getHotspotPassword() {
-        return hotspotPassword;
-    }
-
-    // Configuration variables - move later on to settings.
-    private int port = 9988;
-    private static int pubKeyTimeout = 5000;
-    private static String serverRoot = "/sdcard/sftp";
-    private static String serverKey = "/sdcard/sftp/key.srv";
-    private static String serverKeyType = "RSA";
-    private static String sftpRoot = serverRoot + "/root";
-    private static String hotspotName = "TicSFTP_AP";
-    private static String hotspotPassword = "12345678";
-
     // Server components
-    private SimplePasswordAuthenticator passwordAuth;
     private ConfirmationActivityPublicKeyAuthenticator publicKeyAuth;
     private SimpleFileSystemFactory fileSystemFactory;
     private SimpleGeneratorHostKeyProvider keyProvider;

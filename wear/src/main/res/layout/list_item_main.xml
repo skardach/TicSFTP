@@ -1,0 +1,39 @@
+<com.kda.ticsftp.ListItemLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="8"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|start"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/li_main_name"
+            android:gravity="top|start"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-light"
+            android:lineSpacingExtra="-4sp"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/li_main_description"
+            android:gravity="top|start"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="16dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-light"
+            android:lineSpacingExtra="-4sp"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/li_main_img"
+        android:gravity="center_vertical|end"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/circle_unticked" />
+</com.kda.ticsftp.ListItemLayout>

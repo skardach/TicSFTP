@@ -39,8 +39,8 @@ class HotSpotManager {
                 }
                 wificonfiguration = new WifiConfiguration();
                 wificonfiguration.hiddenSSID = false;
-                wificonfiguration.SSID = SFTPServer.getHotspotName();
-                wificonfiguration.preSharedKey = SFTPServer.getHotspotPassword();
+                wificonfiguration.SSID = Config.hotspotName;
+                wificonfiguration.preSharedKey = Config.hotspotPassword;
                 wificonfiguration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
                 wificonfiguration.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
                 wificonfiguration.allowedProtocols.set(WifiConfiguration.Protocol.WPA);

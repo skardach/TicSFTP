@@ -19,7 +19,7 @@ public class UserLoginConfirmationActivity extends Activity implements DelayedCo
             public void onLayoutInflated(WatchViewStub stub) {
                 mConfirmation = (DelayedConfirmationView) stub.findViewById(R.id.login_confirm);
                 mConfirmation.setListener(UserLoginConfirmationActivity.this);
-                mConfirmation.setTotalTimeMs(SFTPServer.getPubKeyTimeout());
+                mConfirmation.setTotalTimeMs(Config.pubKeyTimeout);
                 mConfirmation.start();
             }
         });
