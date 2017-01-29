@@ -9,10 +9,27 @@ import java.lang.reflect.Method;
 
 class HotSpotManager {
     private static final String TAG="HotSpotManager";
-    private static boolean was_wifi_on = false;
+    private boolean was_wifi_on = false;
+    private String hotspotName = Config.hotspotName;
+    private String hotspotPassword = Config.hotspotPassword;
 
+
+    public String getHotspotName() {
+        return hotspotName;
+    }
+
+    public String getHotspotPassword() {
+        return hotspotPassword;
+    }
+
+    HotSpotManager(String hotspotName, String hotspotPassword) {
+        if (hotspotName != null)
+            this.hotspotName = hotspotName;
+        if (hotspotPassword != null)
+            this.hotspotPassword = hotspotPassword;
+    }
     //check whether wifi hotspot on or off
-    public static boolean isApOn(Context context) {
+    boolean isApOn(Context context) {
         WifiManager wifimanager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
         try {
             Method method = wifimanager.getClass().getDeclaredMethod("isWifiApEnabled");
@@ -26,7 +43,7 @@ class HotSpotManager {
     }
 
     // toggle wifi hotspot on or off
-    public static synchronized boolean configApState(Context context, boolean enable) {
+    synchronized boolean configApState(Context context, boolean enable) {
         if (enable == isApOn(context))
             return true;
         WifiManager wifimanager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);

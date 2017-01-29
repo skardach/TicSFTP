@@ -8,8 +8,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
+import android.util.Base64;
 import android.util.Log;
 
 import java.net.InetAddress;
@@ -29,6 +31,8 @@ public class MainActivity extends Activity implements
     // State flags
     private boolean server_enabled = false;
     private boolean hotspot_enabled = false;
+    // Helper classes
+    HotSpotManager mhotspotMgr;
     // Main list
     private WearableListView mListView;
     // Main menu
@@ -93,7 +97,7 @@ public class MainActivity extends Activity implements
     }
 
     private void handleHotspotChange(boolean enable) {
-        HotSpotManager.configApState(this, enable);
+        mhotspotMgr.configApState(this, enable);
     }
 
 
@@ -102,7 +106,14 @@ public class MainActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mElements = new ArrayList<>();
-        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        String pass = Settings.Secure.getString(
+                getApplicationContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        pass = Base64.encodeToString(pass.getBytes(), 0);
+        mhotspotMgr =
+                new HotSpotManager(Config.hotspotName, pass.substring(0, 8));
+        final WatchViewStub stub =
+                (WatchViewStub) findViewById(R.id.watch_view_stub);
         stub.setOnLayoutInflatedListener(this);
     }
 
@@ -124,8 +135,8 @@ public class MainActivity extends Activity implements
         mHotspotToggle = new MainListViewAdapter.ToggleListElement(
                 LE_HOTSPOT_TAG,
                 getString(R.string.enable_hotspot),
-                String.format("AP: %s, pass: %s", Config.hotspotName,
-                        Config.hotspotPassword),
+                String.format("AP: %s, pass: %s", mhotspotMgr.getHotspotName(),
+                        mhotspotMgr.getHotspotPassword()),
                 hotspot_enabled);
         mServerToggle = new MainListViewAdapter.ToggleListElement(
                 LE_SERVER_TAG,
@@ -155,7 +166,7 @@ public class MainActivity extends Activity implements
                     Context.MODE_PRIVATE).getBoolean(
                         Config.SHP_SRV_ENABLED,
                         server_enabled);
-        hotspot_enabled = HotSpotManager.isApOn(this);
+        hotspot_enabled = mhotspotMgr.isApOn(this);
     }
 
     @Override
