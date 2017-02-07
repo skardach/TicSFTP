@@ -14,6 +14,7 @@ What has been tested is access via `sftp` and `sshfs`.
 __!! WARNING !!__
 
 This is a very alpha version for several reasons:
+
 1. Uses a rather old Apache SSHD library (0.6.0)
 2. All password settings for the WiFi hotspot are stored inside APK.
 3. There is no mobile application for configuration.
